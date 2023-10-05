@@ -17,11 +17,12 @@
 #' theta_star, and log_likelihood evaluated at the convergence point
 #' @export
 fit_latent_var <- function(data_cov, data_outcomes, theta_init, beta_init,
-                           K, M_em=50, s_max, printFlag=FALSE, stop_eps=1e-4)
+                           M_em=50, s_max, printFlag=FALSE, stop_eps=1e-4)
 {
   n = nrow(data_cov)
   p = ncol(data_cov)
   d = ncol(data_outcomes)
+  K = dim(theta_init)[1]
 
   beta_t = beta_init
   theta_t = theta_init
@@ -154,12 +155,13 @@ fit_latent_var <- function(data_cov, data_outcomes, theta_init, beta_init,
 #' theta_star, and log_likelihood evaluated at the convergence point
 #' @export
 fit_mar <- function(data_cov, data_outcomes, theta_init, beta_init,
-                    K, M_mar=50, s_max, printFlag=FALSE, stop_eps_mar=1e-4,
+                    M_mar=50, s_max, printFlag=FALSE, stop_eps_mar=1e-4,
                     stop_eps_latent=1e-4, num_imps=20)
 {
   n = nrow(data_cov)
   p = ncol(data_cov)
   d = ncol(data_outcomes)
+  K = dim(theta_init)[1]
 
   # get missing pattern matrix
   R = get_R_matrix(data_outcomes, s_max)
@@ -182,7 +184,7 @@ fit_mar <- function(data_cov, data_outcomes, theta_init, beta_init,
     ### run Algorithm 1 on stacked imputed data
     latent_fit = fit_latent_var(do.call("rbind", replicate(num_imps, data_cov, simplify = FALSE)),
                                 data_outcomes_im, theta_t, beta_t,
-                                K, M_em=50, s_max, printFlag=printFlag, stop_eps=stop_eps_latent)
+                                M_em=50, s_max, printFlag=printFlag, stop_eps=stop_eps_latent)
 
     beta_t = latent_fit$beta_star
     theta_t = latent_fit$theta_star
@@ -262,7 +264,6 @@ fit_mar_randinit <- function(data_cov, data_outcomes, numRandInit,
   p = ncol(data_cov)
   d = ncol(data_outcomes)
 
-
   ll_vect = rep(NA, numRandInit)
   theta_all_iters = array(NA, c(K, d, numRandInit))
   beta_all_iters = array(NA, c(K-1, p+1, numRandInit))
@@ -283,7 +284,7 @@ fit_mar_randinit <- function(data_cov, data_outcomes, numRandInit,
     theta_t = theta_init
 
     res_mar = fit_mar(data_cov, data_outcomes, theta_t, beta_t,
-                      K, M_mar, s_max, printFlag, stop_eps_mar=stop_eps_mar,
+                      M_mar, s_max, printFlag, stop_eps_mar=stop_eps_mar,
                       stop_eps_latent=stop_eps_latent,
                       num_imps=num_imps)
 
@@ -386,7 +387,7 @@ fit_mar_randinit_parallel <- function(data_cov, data_outcomes, numRandInit,
       ########################## run analysis
 
       res_mar = fit_mar(data_cov, data_outcomes, theta_t, beta_t,
-                        K, M_mar, s_max, printFlag,
+                        M_mar, s_max, printFlag,
                         stop_eps_mar=stop_eps_mar,
                         stop_eps_latent=stop_eps_latent,
                         num_imps=num_imps)
