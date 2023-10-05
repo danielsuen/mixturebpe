@@ -1,8 +1,7 @@
 #' Runs bootstrap using a starting point estimate (parallel implementation)
 #' (Algorithm 4 from paper)
 #'
-#' `bootstrap_parallel()` returns a list containing the beta_star,
-#' theta_star, and log_likelihood evaluated at the convergence point
+#' `bootstrap_parallel()` returns the bootstrap estimates for the parameters
 #'
 #' @param data_cov n x p matrix of covariates
 #' @param data_outcomes n x d matrix of discrete outcomes

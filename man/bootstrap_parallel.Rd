@@ -43,6 +43,5 @@ bootstrap_parallel(
 A list containing the bootstrap estimates for beta and theta
 }
 \description{
-`bootstrap_parallel()` returns a list containing the beta_star,
-theta_star, and log_likelihood evaluated at the convergence point
+`bootstrap_parallel()` returns the bootstrap estimates for the parameters
 }
