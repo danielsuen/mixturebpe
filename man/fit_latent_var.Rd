@@ -10,7 +10,6 @@ fit_latent_var(
   data_outcomes,
   theta_init,
   beta_init,
-  K,
   M_em = 50,
   s_max,
   printFlag = FALSE,
@@ -26,8 +25,6 @@ fit_latent_var(
 
 \item{beta_init}{(K-1) x (p+1) matrix of beta (weight) initial params}
 
-\item{K}{number of mixture components}
-
 \item{M_em}{number of iterations of the EM algorithm}
 
 \item{s_max}{vector of length d, containing the maximum score for each test}
@@ -35,6 +32,8 @@ fit_latent_var(
 \item{printFlag}{True/False flag to print status}
 
 \item{stop_eps}{epsilon for checking convergence}
+
+\item{K}{number of mixture components}
 }
 \value{
 A list containing the beta_star,

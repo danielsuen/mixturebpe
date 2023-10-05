@@ -11,7 +11,6 @@ fit_mar(
   data_outcomes,
   theta_init,
   beta_init,
-  K,
   M_mar = 50,
   s_max,
   printFlag = FALSE,
@@ -29,8 +28,6 @@ fit_mar(
 
 \item{beta_init}{(K-1) x (p+1) matrix of beta (weight) initial params}
 
-\item{K}{number of mixture components}
-
 \item{M_mar}{number of iterations of the outer EM algorithm}
 
 \item{s_max}{vector of length d, containing the maximum score for each test}
@@ -42,6 +39,8 @@ fit_mar(
 \item{stop_eps_latent}{epsilon for checking convergence for each inner EM iter}
 
 \item{num_imps}{number of multiple imputations}
+
+\item{K}{number of mixture components}
 }
 \value{
 A list containing the beta_star,
