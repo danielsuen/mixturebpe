@@ -348,7 +348,7 @@ fit_mar_randinit <- function(data_cov, data_outcomes, numRandInit,
 fit_mar_randinit_parallel <- function(data_cov, data_outcomes, numRandInit,
                                       K, M_mar, s_max, printFlag=FALSE,
                                       stop_eps_mar=1e-4, stop_eps_latent=1e-4,
-                                      num_imps=100)
+                                      num_imps=20)
 {
   ##### parallel part
   pb = txtProgressBar(max = numRandInit, style = 3)
