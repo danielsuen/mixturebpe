@@ -11,13 +11,14 @@ devtools::install_github("danielsuen/mixturebpe")
 
 ## Example Code
 
-In the package, we provide working implementations both sequentially and in parallel.  In practice, we recommend running the code in parallel because there are multiple random initializations and many bootstrap samples.  The following example shows how to run code in parallel.
+In the package, we provide working implementations for obtaining point estimates both sequentially and in parallel.  In practice, we recommend running the code in parallel because there are multiple random initializations and many bootstrap samples.  The following example shows how to run code in parallel.
 
-We first load the package and simulate some data.  The data is simulated according to a mixture of binomial product experts model with $d=4$ outcome variables, $p=2$ covariates, and $K=3$ mixtures.  The parameter $\eta$ controls the amount of missingness.
+We first load the package and set up R for parallelization.  We identify the number of available cores on the machine via **detectCores()**.  We default to using 2 fewer cores than available to not take up all of the computer's resources.  The current progress while model fitting and bootstrapping will displayed using a progress bar.
 
 ```R
 library(doParallel)
 library(doSNOW)
+library(mvtnorm)
 library(mixturebpe)
 
 #### init parallel cores
@@ -25,20 +26,18 @@ library(mixturebpe)
 numCores = detectCores()
 cluster = makeCluster(numCores-2)
 registerDoSNOW(cluster)
+```
 
-#### init bootstrap arrays
+Then, we simulate some data.  The data is simulated according to a mixture of binomial product experts model with $d=4$ outcome variables, $p=2$ covariates, and $K=3$ mixtures.  The parameter $\eta$ controls the amount of missingness, which is generated to be missing at random (MAR).
 
-numBootstraps = 1000
-K = 3
-p = 2
-d = 4
-beta_boot = array(NA, c(K-1, p+1, numBootstraps))
-theta_boot = array(NA, c(K, d, numBootstraps))
-
+```R
 #### generate simulated data
 
 n = 2000
 eta = 2.5
+K = 3
+p = 2
+d = 4
 
 s_max = c(5,10,10,20)
 
@@ -67,60 +66,20 @@ theta_mar = res_mar$theta_star
 beta_mar = res_mar$beta_star
 ```
 
-Finally, we run the bootstrap:
+Finally, we run the bootstrap (Algorithm 4):
 
 ```R
 ##### bootstrap
 
-pb = txtProgressBar(max = numBootstraps, style = 3)
-progress <- function(n) setTxtProgressBar(pb, n)
-opts <- list(progress = progress)
-
-
-output = foreach (jj = 1:numBootstraps, .combine='comb', .packages=c('nnet'),
-                  .multicombine=TRUE, .options.snow = opts) %dopar%
-{
-
-    ########################## bootstrap
-
-    boot_idx = sample(n, n, replace=TRUE)
-    X_boot = X[boot_idx,]
-    Y_boot = Y_obs[boot_idx,]
-
-    ########################## run analysis
-
-    res_boot = fit_mar(X_boot, Y_boot, theta_mar, beta_mar,
-                       K, M_mar=100, s_max,
-                       stop_eps_mar=stop_eps_mar,
-                       stop_eps_latent=stop_eps_latent,
-                       num_imps=20)
-
-    ######################### get results
-
-    as.list(c(c(res_boot$beta_star), c(res_boot$theta_star)))
-  }
+boot = bootstrap_parallel(X, Y_obs, theta_mar,
+                          beta_mar, M_mar, s_max, numBootstraps=1000,
+                          stop_eps_mar=1e-4, stop_eps_latent=1e-4,
+                          num_imps=20)
 
 #### unpack bootstrap results
 
-beta_boot[1, 1, ] = unlist(output[[1]])
-beta_boot[2, 1, ] = unlist(output[[2]])
-beta_boot[1, 2, ] = unlist(output[[3]])
-beta_boot[2, 2, ] = unlist(output[[4]])
-beta_boot[1, 3, ] = unlist(output[[5]])
-beta_boot[2, 3, ] = unlist(output[[6]])
-
-theta_boot[1, 1, ] = unlist(output[[7]])
-theta_boot[2, 1, ] = unlist(output[[8]])
-theta_boot[3, 1, ] = unlist(output[[9]])
-theta_boot[1, 2, ] = unlist(output[[10]])
-theta_boot[2, 2, ] = unlist(output[[11]])
-theta_boot[3, 2, ] = unlist(output[[12]])
-theta_boot[1, 3, ] = unlist(output[[13]])
-theta_boot[2, 3, ] = unlist(output[[14]])
-theta_boot[3, 3, ] = unlist(output[[15]])
-theta_boot[1, 4, ] = unlist(output[[16]])
-theta_boot[2, 4, ] = unlist(output[[17]])
-theta_boot[3, 4, ] = unlist(output[[18]])
+beta_boot = boot$beta_boot
+theta_boot = boot$theta_boot
 ```
 
 We can construct $95\\%$ confidence intervals for a given parameter (say $\theta_{1,1}$) via the following code:
