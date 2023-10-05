@@ -14,8 +14,7 @@
 #' @param stop_eps_mar epsilon for checking convergence for each outer EM iter
 #' @param stop_eps_latent epsilon for checking convergence for each inner EM iter
 #' @param num_imps number of multiple imputations
-#' @returns A list containing the beta_star,
-#' theta_star, and log_likelihood evaluated at the convergence point
+#' @returns A list containing the bootstrap estimates for beta and theta
 #' @export
 bootstrap_parallel <- function(data_cov, data_outcomes, theta_init,
                                beta_init, M_mar, s_max, numBootstraps=1000,

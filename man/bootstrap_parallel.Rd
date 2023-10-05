@@ -40,8 +40,7 @@ bootstrap_parallel(
 \item{num_imps}{number of multiple imputations}
 }
 \value{
-A list containing the beta_star,
-theta_star, and log_likelihood evaluated at the convergence point
+A list containing the bootstrap estimates for beta and theta
 }
 \description{
 `bootstrap_parallel()` returns a list containing the beta_star,
