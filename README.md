@@ -13,7 +13,7 @@ devtools::install_github("danielsuen/mixturebpe")
 
 In the package, we provide working implementations for obtaining point estimates both sequentially and in parallel.  In practice, we recommend running the code in parallel because there are multiple random initializations and many bootstrap samples.  The following example shows how to run code in parallel.
 
-We first load the package and set up R for parallelization.  We identify the number of available cores on the machine via **detectCores()**.  We default to using 2 fewer cores than available to not take up all of the computer's resources.  The current progress while model fitting and bootstrapping will displayed using a progress bar.
+We first load the package and set up R for parallelization.  We identify the number of available cores on the machine via **detectCores()**.  We default to using 2 fewer cores than available to not take up all of the computer's resources.  The current progress while model fitting and bootstrapping will be displayed using a progress bar.
 
 ```R
 library(doParallel)
