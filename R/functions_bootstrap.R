@@ -51,7 +51,7 @@ bootstrap_parallel <- function(data_cov, data_outcomes, theta_init,
 
       res_boot = fit_mar(data_cov_boot, data_outcomes_boot,
                          theta_init, beta_init,
-                         K, M_mar=100, s_max,
+                         M_mar=100, s_max,
                          stop_eps_mar=stop_eps_mar,
                          stop_eps_latent=stop_eps_latent,
                          num_imps=20)
