@@ -72,7 +72,7 @@ Finally, we run the bootstrap (Algorithm 4):
 ##### bootstrap
 
 boot = bootstrap_parallel(X, Y_obs, theta_mar,
-                          beta_mar, M_mar, s_max, numBootstraps=1000,
+                          beta_mar, M_mar=100, s_max, numBootstraps=1000,
                           stop_eps_mar=1e-4, stop_eps_latent=1e-4,
                           num_imps=20)
 
