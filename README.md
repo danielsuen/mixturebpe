@@ -1,6 +1,11 @@
 # mixturebpe
 R implementation of algorithms for fitting mixture of binomial product experts model with missing at random (MAR) data
 
+`mixturebpe` is an R package for the methods in: 
+> Suen, Daniel and Chen, Yen-Chi. (2023). "Modeling Missing at Random Neuropsychological Test Scores Using a Mixture of Binomial Product Experts." *arXiv Preprint arXiv:2310.09384*.
+
+The manuscript can be found [here](https://arxiv.org/abs/2310.09384).
+
 ## Installation 
 This package currently only exists on Github.  This package can be installed using the [devtools](https://github.com/hadley/devtools) package.  Run the following code:
 
