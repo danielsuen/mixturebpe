@@ -52,7 +52,7 @@ bootstrap_parallel <- function(data_cov, data_outcomes, theta_init,
                          M_mar=100, s_max,
                          stop_eps_mar=stop_eps_mar,
                          stop_eps_latent=stop_eps_latent,
-                         num_imps=20)
+                         num_imps=num_imps)
 
       ######################### get results
 
